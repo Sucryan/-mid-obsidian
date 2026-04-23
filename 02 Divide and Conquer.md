@@ -5,13 +5,31 @@ tags:
   - algorithm
   - divide-and-conquer
   - geometry
+  - exam-review
 aliases:
   - 分治法
 source_files:
   - /Users/ryansuc/Desktop/G1-1/algo/slide/2026.03.20 Divide and Conquer.pdf
+exam_priority: medium
+updated: 2026-04-23
 ---
 
 # Divide and Conquer
+
+## 考試版重點
+
+> [!important]
+> 這章不要只背題名；考試通常會看你能不能說出 `Divide`、`Conquer`、`Combine`，再寫出時間複雜度依據。
+
+高頻答題模板：
+
+- `Divide`：怎麼切問題，通常是切成左右兩半。
+- `Conquer`：左右子問題是否同型，寫出遞迴呼叫。
+- `Combine`：最容易考，必須說明如何避免暴力合併。
+- `Complexity`：寫成 recurrence，再連回 [[01 時間複雜度、遞迴式與 Heap#3. Master Theorem]]。
+
+> [!note]
+> 考試方向提到「divide and conquer 蠻 hard 用血的、解題思維、時間複雜度計算」。所以本章複習重心是 combine 的設計理由，不是把投影片流程背成條列。
 
 ## 1. Divide and Conquer 的通用套路
 
@@ -28,6 +46,27 @@ T(n)=aT(n/b)+f(n)
 $$
 
 這章的多數問題都能回到 [[01 時間複雜度、遞迴式與 Heap#3. Master Theorem]] 的分析框架。
+
+### Merge Sort 型題目的標準複雜度
+
+很多題目雖然不是直接問 merge sort，但結構會長得一樣：
+
+$$
+T(n)=2T(n/2)+\Theta(n)
+$$
+
+用 Master Theorem：
+
+- `a=2`
+- `b=2`
+- $n^{\log_b a}=n$
+- $f(n)=\Theta(n)$
+
+所以是 Case 2：
+
+$$
+T(n)=\Theta(n\log n)
+$$
 
 ## 2. Maximum Subarray Problem
 
@@ -62,6 +101,12 @@ $$
 T(n)=2T(n/2)+\Theta(n)=\Theta(n\log n)
 $$
 
+考試寫法：
+
+- `Divide` 是切左右半段。
+- `Combine` 是花 `O(n)` 找 crossing subarray。
+- 因此可直接套 Master Theorem Case 2。
+
 ## 3. Closest Pair of Points
 
 ### 問題
@@ -90,6 +135,14 @@ $$
 \Theta(n\log n)
 $$
 
+複雜度依據：
+
+$$
+T(n)=2T(n/2)+O(n)
+$$
+
+只要 strip merge 能維持線性，整體就是 `Θ(n log n)`；若 strip 用暴力兩兩比，combine 會炸掉，分治就失去意義。
+
 ## 4. Convex Hull
 
 ### 定義
@@ -114,6 +167,16 @@ Convex hull 是「包住所有點的最小凸多邊形」。
 - 分治先把點集切開
 - 合併時只保留外層邊界
 - scan 類方法的任務是刪掉「方向轉錯」的點
+
+### 凸包補充讀法
+
+外部補充文章的重點可壓成三句：
+
+- 先依座標排序，掃描時維護一個 stack。
+- 用 cross product 判斷三點轉向，轉錯就 pop。
+- 上凸包與下凸包分別掃，最後合併。
+
+這和投影片的分治凸包不同，但共同核心都是：用 scan 排除 reflexive / 轉向錯誤的點。
 
 ## 5. Voronoi Diagram
 
@@ -165,3 +228,4 @@ Convex hull 是「包住所有點的最小凸多邊形」。
 ## 8. 延伸閱讀
 
 - 若想補 Voronoi 與最近鄰搜尋，接著看 [[03 Voronoi Diagram 與最近鄰補充]]。
+- 凸包掃描線與 cross product 觀念可參考 [WiwiHo 凸包筆記](https://hackmd.io/@wiwiho/CPN-convex-hull)。

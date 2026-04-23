@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02 Divide and Conquer.md",
+                "file": "04 Prune and Search.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "02 Divide and Conquer"
+              "title": "04 Prune and Search"
             }
           }
         ]
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "884fd1ebe1412169",
@@ -185,12 +186,16 @@
   },
   "active": "f3e51a5618684bed",
   "lastOpenFiles": [
-    "00 演算法課程筆記總覽.md",
-    "06 Greedy 練習題 Week 7.md",
-    "05 Prune and Search 圖解補充.md",
+    "08 LeetCode Part 演算法總整理.md",
     "04 Prune and Search.md",
+    "01 時間複雜度、遞迴式與 Heap.md",
+    "Heap.md",
+    "06 Greedy 練習題 Week 7.md",
+    "07 考試互動討論與待注記.md",
+    "考試重點.md",
     "03 Voronoi Diagram 與最近鄰補充.md",
     "02 Divide and Conquer.md",
-    "01 時間複雜度、遞迴式與 Heap.md"
+    "05 Prune and Search 圖解補充.md",
+    "00 演算法課程筆記總覽.md"
   ]
 }

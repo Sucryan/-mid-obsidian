@@ -5,17 +5,52 @@ tags:
   - algorithm
   - prune-and-search
   - geometry
+  - exam-review
 aliases:
   - Prune and Search 補充圖解
 source_files:
   - /Users/ryansuc/Desktop/G1-1/algo/slide/2026.04.17 Pune  Search範例補充_上傳E3用.pdf
   - /Users/ryansuc/Desktop/G1-1/algo/slide/補充資料_Simplified Two-Variable Linear Programming Problem_20260410 (1).pdf
+exam_priority: high
+updated: 2026-04-23
 ---
 
 # Prune and Search 圖解補充
 
 > [!note]
 > 這兩份補充投影片偏圖形直覺，適合拿來理解「為什麼可以刪」而不是只背公式。
+
+## 考試版 LP 例題流程
+
+> [!important]
+> 0417 補充投影片與手寫補充資料是在示範「照 Step 2 開始跑」。考試如果給圖，通常會給定可用的交點或配對；不同配對可能讓 Step 2 之後的中間答案不同，但判斷規則一樣。
+
+以補充資料中的 8 條線為例，第一輪可讀成：
+
+1. 配對後得到交點 $x_{38}, x_{56}, x_{47}, x_{12}$。
+2. 取 median，投影片示範令 $x_m=x_{47}$。
+3. 算 $y_{47}=F(x_{47})$。
+4. active constraint 的斜率為正，所以 $x_0<x_m$。
+5. 只看交點在 $x_m$ 右側的配對；在左半邊永遠比較低的線可以刪。
+6. 手寫補充示範刪掉 $a_1x+b_1$ 與 $a_4x+b_4$。
+
+第二輪的示範重點：
+
+1. 剩下的線重新配對，示範取 $x_m=x_{56}$。
+2. $y_{56}=F(x_{56})$，active constraint 的斜率仍為正。
+3. 因此 $x_0<x_m$，繼續刪掉在保留左半邊不可能成為 upper envelope 的線。
+4. 手寫補充示範刪掉 $a_2x+b_2$ 與 $a_5x+b_5$。
+
+第三輪到結束：
+
+1. 重新配對後示範取 $x_m=x_{78}$。
+2. 此時 $g_{\max}<0$ 且 $g_{\min}<0$，所以 $x_0>x_m$。
+3. 改看交點在 $x_m$ 左側的配對；手寫補充示範刪掉 $a_6x+b_6$ 與 $a_8x+b_8$。
+4. 最後剩下交點 $x_{37}$，且 $g_{\min}<0<g_{\max}$。
+5. 因此 $y_{37}=F(x_{37})$ 就是 optimal solution。
+
+> [!tip] 跑圖題時的固定格式
+> 先列 `Step 2: x_ij`，再列 `Step 3: x_m`，接著寫 `Step 4: y_m=F(x_m)` 與 active slopes，最後才寫 prune 哪些 constraints。不要直接跳到答案。
 
 ## 1. 線性規劃的圖形觀點
 
@@ -68,6 +103,17 @@ source_files:
 > [!tip]
 > 在「錯的那一側」發生交會的兩條線，其中一定有一條對答案永遠不重要。
 
+### 對應 0417 p6 的刪除例子
+
+若已知 $x_0<x_m$，判斷時要先看該 constraint 屬於哪一種 envelope：
+
+- 若是在 simplified form 的 lower constraints，也就是 $F_1(x)=\max_i(a_ix+b_i)$，保留區間中永遠比較低的線可刪。
+- 例如 $a_1x+b_1<a_2x+b_2$ for $x<x_m$，則 $a_1x+b_1$ 對 upper envelope 沒貢獻。
+- 若是在 upper constraints，也就是 $F_2(x)=\min_i(a_ix+b_i)$，保留區間中永遠比較高的線可刪。
+- 投影片 p6 的第二個例子屬於這種判斷：$a_5x+b_5<a_4x+b_4$ for $x<x_m$，所以較高的 $a_4x+b_4$ 不會影響 lower envelope。
+
+這裡容易混淆的是「刪掉哪條」不是只看斜率大小本身，而是看目前處理的是 `max` envelope 還是 `min` envelope。
+
 ## 4. `g_min` / `g_max` 的幾何意義
 
 當 `x = x_m` 時，若 `(x_m, y_m)` 同時落在多條限制式上：
@@ -94,6 +140,19 @@ source_files:
 - 觀察哪一批候選函數在某側已不可能主導
 - 直接刪掉
 
+考試講法可以抓三個詞：
+
+- 「公平點」：一對點的中垂線與圓心限制線的交點，在那裡兩點距離相等。
+- 「大魔王點」：在 median 位置 $x_m$ 離圓心最遠的點，用它的投影方向判斷答案在左或右。
+- 「反方向 pair」：若答案在左，就看公平點在右邊的 pair；若答案在右，就看公平點在左邊的 pair。
+
+為什麼反方向 pair 可以刪？
+
+假設答案在 $x_m$ 左邊，而某 pair 的公平點 $x_{ij}$ 在 $x_m$ 右邊。之後搜尋範圍都在公平點左側，所以這兩點的距離函數不會交叉；在 $x_m$ 比較近的那個點，之後永遠也比較近，不可能成為撐大半徑的點，因此可以刪掉。
+
+> [!summary]
+> 1-center 的 prune 規則：先用大魔王決定搜尋方向，再看 median 反側的公平點 pair，刪掉 pair 中在 $x_m$ 較近的點。每輪刪約 $1/4$，所以 $T(n)\le T(3n/4)+O(n)=O(n)$。
+
 ## 6. 讀圖時要抓的重點
 
 - 哪些線是目前的 upper envelope / lower envelope
@@ -107,3 +166,10 @@ source_files:
 - 最後刪掉「永遠不會主導答案」的限制式
 
 如果這三步你能順著圖講清楚，這章基本就掌握了。
+
+## 8. 考前自問
+
+- 圖上某個 $y_m$ 只有一條 constraint 經過時，你會用哪個斜率判斷方向？
+- 圖上某個 $y_m$ 是多條線交點時，你會怎麼找 $g_{\min}$ 與 $g_{\max}$？
+- 已知 $x_0<x_m$ 時，你能不能解釋為什麼看 $x_{ij}>x_m$ 的配對？
+- 如果配對方式和投影片不同，你能不能照同一規則跑出另一組合法中間步驟？
